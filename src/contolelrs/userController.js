@@ -49,3 +49,27 @@ exports.getMyProfile = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+exports.uploadProfile = async (req, res) => {
+    try {
+        console.log("Uploading profile pic")
+    const userId = req.params.id;
+    const filePath = req.file ? req.file.path : "";
+
+    if (!filePath) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: filePath },
+      { new: true }
+    );
+
+    res.json({
+      message: "Profile picture uploaded successfully",
+      user
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
